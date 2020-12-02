@@ -14,14 +14,17 @@ all = soup.find_all("div", {"data-component-type": "s-search-result", "class": "
 
 for item in all:
     description = item.find_all("div", {"class": "a-section a-spacing-none a-spacing-top-small"})[0].find("span", {"class": "a-size-base-plus a-color-base a-text-normal"}).text
-    #print(counter, ": ",description)
 
     try:
         stars = item.find("span", {"class": "a-icon-alt"}).text.replace(" de 5 estrellas", "")
     except:
         stars = None
     
-    print(stars)
+    try:
+        reviews = item.find_all("div", {"class": "a-section a-spacing-none a-spacing-top-micro"})[0].find("span", {"class": "a-size-base"}).text
+    except:
+        reviews = None
+    print(reviews)
 
     #counter = counter + 1
     
