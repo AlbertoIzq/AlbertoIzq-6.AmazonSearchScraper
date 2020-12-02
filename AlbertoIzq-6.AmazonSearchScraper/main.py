@@ -1,7 +1,25 @@
 import requests
 from bs4 import BeautifulSoup
+import pandas # To save it to csv file
 
-url = "https://www.amazon.es/s?k=guitarra+electrica&__mk_es_ES=%C3%85M%C3%85%C5%BD%C3%95%C3%91&ref=nb_sb_noss_2"
+# URL CREATION
+url_creator = []
+url_creator.append("https://www.amazon.es/s?k=")
+item_search = "guitarra electrica 7 cuerdas"
+item_search = item_search.replace(" ", "+")
+url_creator.append(item_search)
+url_creator.append("&page=")
+page_number = 1
+url_creator.append(str(page_number))
+url_creator.append("&__mk_es_ES=%C3%85M%C3%85%C5%BD%C3%95%C3%91&ref=sr_pg_")
+url_creator.append(str(page_number))
+
+url = ""
+
+for s in url_creator:
+    url = url + s
+
+#url = "https://www.amazon.es/s?k=guitarra+electrica&__mk_es_ES=%C3%85M%C3%85%C5%BD%C3%95%C3%91&ref=nb_sb_noss_2"
 r = requests.get(url, headers={'User-agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0'})
 c = r.content
 #c
@@ -65,6 +83,5 @@ for item in all:
 
     l.append(d)
 
-import pandas
 df = pandas.DataFrame(l)
 df.to_csv("Output.csv")
