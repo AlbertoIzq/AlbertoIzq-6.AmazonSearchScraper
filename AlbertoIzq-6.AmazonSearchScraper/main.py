@@ -58,7 +58,7 @@ l = []
 
 for page in range(1, page_nr + 1, 1):
     url = url_creation(item_search, page)
-    print("CURRENT URL:", url)
+    print("CURRENT URL:", url, "\n")
 
     # RETRIEVE ITEM INFO FROM WEBPAGE
     r = requests.get(url, headers={'User-agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0'})
@@ -119,8 +119,9 @@ for page in range(1, page_nr + 1, 1):
 
         l.append(d)
 
-    print("PAGE", page, "PROCESSED!")
+    print("\n" + "PAGE", page, "PROCESSED!", "\n")
 
 # SAVE INFO INTO CSV FILE
 df = pandas.DataFrame(l)
-df.to_csv("Output.csv")
+output_file_name = "Output-" + item_search + ".csv"
+df.to_csv(output_file_name)
