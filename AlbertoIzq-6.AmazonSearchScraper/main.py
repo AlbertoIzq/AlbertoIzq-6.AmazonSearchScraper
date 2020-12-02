@@ -10,26 +10,37 @@ soup = BeautifulSoup(c, "html.parser")
 all = soup.find_all("div", {"data-component-type": "s-search-result", "class": "s-result-item"})
 #print(len(all))
 
-#counter = 1
+counter = 1
 
 for item in all:
     description = item.find_all("div", {"class": "a-section a-spacing-none a-spacing-top-small"})[0].find("span", {"class": "a-size-base-plus a-color-base a-text-normal"}).text
+    print("___", counter, ": ", description)
 
     try:
         stars = item.find("span", {"class": "a-icon-alt"}).text.replace(" de 5 estrellas", "")
     except:
         stars = None
-    
+    print(stars, " stars")
+
     try:
         reviews = item.find_all("div", {"class": "a-section a-spacing-none a-spacing-top-micro"})[0].find("span", {"class": "a-size-base"}).text
     except:
         reviews = None
-    
+    print(reviews, " reviews")
+
     try:
         price = item.find_all("div", {"class": "a-section a-spacing-none a-spacing-top-small"})[1].find("span", {"class": "a-price-whole"}).text
     except:
         price = None
+    print("price is ", price, " €")
 
-    print(price)
-    #counter = counter + 1
+    try:
+        amazon_prime = item.find_all("div", {"class": "a-section a-spacing-none a-spacing-top-micro"})[1].find("i", {"class": "a-icon a-icon-prime a-icon-medium"})
+        amazon_prime = "Yes"
+        print("AMAZON PRIME YES")
+    except:
+        amazon_prime = "No"
+        print("NO")
+
+    counter = counter + 1
     
