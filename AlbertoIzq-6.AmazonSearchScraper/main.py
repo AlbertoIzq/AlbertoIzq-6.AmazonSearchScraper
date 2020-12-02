@@ -50,71 +50,76 @@ def retrieve_page_nr(item_search):
 item_search = "guitarra eléctrica 7 cuerdas"
 page_nr = retrieve_page_nr(item_search)
 url = url_creation(item_search, 1)
-
 #print(page_nr)
 #print(url)
-
-# RETRIEVE ITEM INFO FROM WEBPAGE
-r = requests.get(url, headers={'User-agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0'})
-c = r.content
-#c
-soup = BeautifulSoup(c, "html.parser")
-#print(soup.prettify())
-all = soup.find_all("div", {"data-component-type": "s-search-result", "class": "s-result-item"})
-#print(len(all))
 
 counter = 1
 l = []
 
-for item in all:
-    d = {}
+for page in range(1, page_nr + 1, 1):
+    url = url_creation(item_search, page)
+    print("CURRENT URL:", url)
 
-    description = item.find_all("div", {"class": "a-section a-spacing-none a-spacing-top-small"})[0].find("span", {"class": "a-size-base-plus a-color-base a-text-normal"}).text
-    d["Description"] = description
-    print("___", counter, ": ", description)
+    # RETRIEVE ITEM INFO FROM WEBPAGE
+    r = requests.get(url, headers={'User-agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0'})
+    c = r.content
+    #c
+    soup = BeautifulSoup(c, "html.parser")
+    #print(soup.prettify())
+    all = soup.find_all("div", {"data-component-type": "s-search-result", "class": "s-result-item"})
+    #print(len(all))
+
+    for item in all:
+        d = {}
+
+        description = item.find_all("div", {"class": "a-section a-spacing-none a-spacing-top-small"})[0].find("span", {"class": "a-size-base-plus a-color-base a-text-normal"}).text
+        d["Description"] = description
+        print("___", counter, ": ", description)
    
-    try:
-        stars = item.find("span", {"class": "a-icon-alt"}).text.replace(" de 5 estrellas", "")
-    except:
-        stars = None
-    d["Stars"] = stars
-    print(stars, " stars")
+        try:
+            stars = item.find("span", {"class": "a-icon-alt"}).text.replace(" de 5 estrellas", "")
+        except:
+            stars = None
+        d["Stars"] = stars
+        print(stars, " stars")
 
-    try:
-        reviews = item.find_all("div", {"class": "a-section a-spacing-none a-spacing-top-micro"})[0].find("span", {"class": "a-size-base"}).text
-    except:
-        reviews = None
-    d["Reviews"] = reviews
-    print(reviews, " reviews")
+        try:
+            reviews = item.find_all("div", {"class": "a-section a-spacing-none a-spacing-top-micro"})[0].find("span", {"class": "a-size-base"}).text
+        except:
+            reviews = None
+        d["Reviews"] = reviews
+        print(reviews, " reviews")
 
-    try:
-        price = item.find_all("div", {"class": "a-section a-spacing-none a-spacing-top-small"})[1].find("span", {"class": "a-price-whole"}).text
-    except:
-        price = None
-    d["Price"] = price
-    print("price is ", price, " €")
+        try:
+            price = item.find_all("div", {"class": "a-section a-spacing-none a-spacing-top-small"})[1].find("span", {"class": "a-price-whole"}).text
+        except:
+            price = None
+        d["Price"] = price
+        print("price is ", price, " €")
 
-    try:
-        amazon_prime = item.find_all("div", {"class": "a-section a-spacing-none a-spacing-top-micro"})[1].find("i", {"class": "a-icon a-icon-prime a-icon-medium"})
-        amazon_prime = "Yes"
-        print("Amazon prime YES")
-    except:
-        amazon_prime = "No"
-        print("NO Amazon prime")
-    d["Amazon prime"] = amazon_prime
+        try:
+            amazon_prime = item.find_all("div", {"class": "a-section a-spacing-none a-spacing-top-micro"})[1].find("i", {"class": "a-icon a-icon-prime a-icon-medium"})
+            amazon_prime = "Yes"
+            print("Amazon prime YES")
+        except:
+            amazon_prime = "No"
+            print("NO Amazon prime")
+        d["Amazon prime"] = amazon_prime
 
-    try:
-        best_seller = item.find("div", {"class": "a-section a-spacing-micro s-grid-status-badge-container"}).find_all("span", {"class": "a-badge-text"})[0]
-        best_seller = "Yes"
-        print("Best-seller YES")
-    except:
-        best_seller = "No"
-        print("NO Best-seller")
-    d["Best seller"] = best_seller
+        try:
+            best_seller = item.find("div", {"class": "a-section a-spacing-micro s-grid-status-badge-container"}).find_all("span", {"class": "a-badge-text"})[0]
+            best_seller = "Yes"
+            print("Best-seller YES")
+        except:
+            best_seller = "No"
+            print("NO Best-seller")
+        d["Best seller"] = best_seller
 
-    counter = counter + 1
+        counter = counter + 1
 
-    l.append(d)
+        l.append(d)
+
+    print("PAGE", page, "PROCESSED!")
 
 # SAVE INFO INTO CSV FILE
 df = pandas.DataFrame(l)
