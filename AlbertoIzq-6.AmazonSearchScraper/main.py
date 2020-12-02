@@ -42,5 +42,13 @@ for item in all:
         amazon_prime = "No"
         print("NO")
 
+    try:
+        best_seller = item.find("div", {"class": "a-section a-spacing-micro s-grid-status-badge-container"}).find_all("span", {"class": "a-badge-text"})[0]
+        best_seller = "Yes"
+        print("Más vendido")
+    except:
+        best_seller = "No"
+        print("NO")
+
     counter = counter + 1
     
