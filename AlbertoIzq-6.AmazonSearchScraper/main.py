@@ -24,7 +24,12 @@ for item in all:
         reviews = item.find_all("div", {"class": "a-section a-spacing-none a-spacing-top-micro"})[0].find("span", {"class": "a-size-base"}).text
     except:
         reviews = None
-    print(reviews)
+    
+    try:
+        price = item.find_all("div", {"class": "a-section a-spacing-none a-spacing-top-small"})[1].find("span", {"class": "a-price-whole"}).text
+    except:
+        price = None
 
+    print(price)
     #counter = counter + 1
     
