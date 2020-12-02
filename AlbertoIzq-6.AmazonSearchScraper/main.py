@@ -12,26 +12,35 @@ all = soup.find_all("div", {"data-component-type": "s-search-result", "class": "
 
 counter = 1
 
+l = []
+
 for item in all:
+    d = {}
+
     description = item.find_all("div", {"class": "a-section a-spacing-none a-spacing-top-small"})[0].find("span", {"class": "a-size-base-plus a-color-base a-text-normal"}).text
+    d["Description"] = description
     print("___", counter, ": ", description)
+   
 
     try:
         stars = item.find("span", {"class": "a-icon-alt"}).text.replace(" de 5 estrellas", "")
     except:
         stars = None
+    d["Stars"] = stars
     print(stars, " stars")
 
     try:
         reviews = item.find_all("div", {"class": "a-section a-spacing-none a-spacing-top-micro"})[0].find("span", {"class": "a-size-base"}).text
     except:
         reviews = None
+    d["Reviews"] = reviews
     print(reviews, " reviews")
 
     try:
         price = item.find_all("div", {"class": "a-section a-spacing-none a-spacing-top-small"})[1].find("span", {"class": "a-price-whole"}).text
     except:
         price = None
+    d["Price"] = price
     print("price is ", price, " €")
 
     try:
@@ -41,6 +50,7 @@ for item in all:
     except:
         amazon_prime = "No"
         print("NO")
+    d["Amazon prime"] = amazon_prime
 
     try:
         best_seller = item.find("div", {"class": "a-section a-spacing-micro s-grid-status-badge-container"}).find_all("span", {"class": "a-badge-text"})[0]
@@ -49,6 +59,12 @@ for item in all:
     except:
         best_seller = "No"
         print("NO")
+    d["Best seller"] = best_seller
 
     counter = counter + 1
-    
+
+    l.append(d)
+
+import pandas
+df = pandas.DataFrame(l)
+df.to_csv("Output.csv")
