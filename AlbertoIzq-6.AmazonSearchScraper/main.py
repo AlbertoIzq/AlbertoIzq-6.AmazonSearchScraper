@@ -47,7 +47,7 @@ def retrieve_page_nr(item_search):
     return page_nr
 
 # GET URL AND NUMBER OF PAGES
-item_search = "guitarra eléctrica 7 cuerdas"
+item_search = input("- Write your search query: ") #"guitarra eléctrica 7 cuerdas"
 page_nr = retrieve_page_nr(item_search)
 url = url_creation(item_search, 1)
 #print(page_nr)
@@ -58,7 +58,7 @@ l = []
 
 for page in range(1, page_nr + 1, 1):
     url = url_creation(item_search, page)
-    print("CURRENT URL:", url, "\n")
+    print("\n" + "CURRENT URL:", url, "\n")
 
     # RETRIEVE ITEM INFO FROM WEBPAGE
     r = requests.get(url, headers={'User-agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0'})
@@ -74,7 +74,7 @@ for page in range(1, page_nr + 1, 1):
 
         description = item.find_all("div", {"class": "a-section a-spacing-none a-spacing-top-small"})[0].find("span", {"class": "a-size-base-plus a-color-base a-text-normal"}).text
         d["Description"] = description
-        print("___", counter, ": ", description)
+        print("__", counter, ": ", description)
    
         try:
             stars = item.find("span", {"class": "a-icon-alt"}).text.replace(" de 5 estrellas", "")
@@ -95,7 +95,7 @@ for page in range(1, page_nr + 1, 1):
         except:
             price = None
         d["Price"] = price
-        print("price is ", price, " €")
+        print("price is", str(price) + " €")
 
         try:
             amazon_prime = item.find_all("div", {"class": "a-section a-spacing-none a-spacing-top-micro"})[1].find("i", {"class": "a-icon a-icon-prime a-icon-medium"})
@@ -119,9 +119,10 @@ for page in range(1, page_nr + 1, 1):
 
         l.append(d)
 
-    print("\n" + "PAGE", page, "PROCESSED!", "\n")
+    print("\n" + "PAGE", page, "PROCESSED!")
 
 # SAVE INFO INTO CSV FILE
 df = pandas.DataFrame(l)
 output_file_name = "Output-" + item_search + ".csv"
 df.to_csv(output_file_name)
+print("\n" + "File", output_file_name, "has been created")
